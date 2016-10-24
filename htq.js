@@ -2,11 +2,28 @@
  * @author  xing7th@gmail.com
  * @website http://www.showdoc.cc/htq
  */
-
+var redis = require('redis');
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('./config.json').toString());
 var cp = require('child_process');
 
-run_js("queue.js");
-run_js("api.js");
+var redis_client = redis.createClient(config.redis_port,config.redis_host); //creates a new client
+// redis 链接成功
+redis_client.on("connect", function(error) {
+	console.log("REDIS连接成功");
+	//console.log(error);
+	
+	run_js("queue.js");
+	run_js("api.js");
+	
+});
+// redis 链接错误
+redis_client.on("error", function(error) {
+	console.log("REDIS连接错误:");
+	console.log(error);
+});
+
+
 
 
 
