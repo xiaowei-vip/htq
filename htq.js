@@ -20,7 +20,7 @@ redis_client.on("connect", function(error) {
 // redis 链接错误
 redis_client.on("error", function(error) {
 	console.log("REDIS连接错误:");
-	console.log(error);
+	//console.log(error);
 });
 
 
