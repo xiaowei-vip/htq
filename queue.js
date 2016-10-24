@@ -15,18 +15,21 @@ console.log("后台队列服务已经启动，随时等待新队列任务");
 redis_client.on("ready", function(error) {
 	console.log("REDIS连接成功");
 	//console.log(error);
+	
+	//定时循环读取redis。不用担心会无序并发运行，后面会根据queue_status_array来控制同一时间只操作一个队列
+	setInterval(function(){
+		check_queue_hash();
+	},1000);
+	
 });
 // redis 链接错误
 redis_client.on("error", function(error) {
-	console.log("REDIS错误:");
+	console.log("REDIS连接错误:");
 	console.log(error);
 });
 var queue_status_array = [];
 
-//定时循环读取redis。不用担心会无序并发运行，后面会根据queue_status_array来控制同一时间只操作一个队列
-setInterval(function(){
-	check_queue_hash();
-},1000);
+
 
 
 //扫描整个队列哈希表
