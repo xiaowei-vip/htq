@@ -30,7 +30,7 @@ function check_queue_hash(){
 				var single_attribute = JSON.parse(queue_list[i+1]);
 				//判断队列是否在操作中。如果是则不重复启动，以保证同一个队列内的任务是按顺序one by one 执行的
 				if (queue_status_array &&  queue_status_array[single_queue_name] > 0 ) {
-					////console.log('队列'+single_queue_name+'正操作中，不重复启动');
+					console.log('队列'+single_queue_name+'正操作中，不重复启动');
 				}else{
 					//执行单个队列single_queue_name
 					run_queue(single_queue_name,single_attribute);
@@ -60,7 +60,7 @@ function run_queue(queue_name,attribute){
 				redis_client.hget(times_queue,url,function(err, reply){
 					var execution_times = parseInt(reply) ? parseInt(reply) : 0 ;
 					request(request_url, function (error, response, body) {
-						////console.log("第"+(execution_times+1)+"次执行来自"+queue_name+"的url："+request_url);
+						console.log("第"+(execution_times+1)+"次执行来自"+queue_name+"的url："+request_url);
 						if (body == "done") {
 							//删除任务
 							redis_client.zrem(queue_name,url);
@@ -94,7 +94,7 @@ function run_queue(queue_name,attribute){
 				//删除这个元素。不在执行url后在删除是为了防止因为执行不了url而造成阻塞
 				redis_client.zrem(queue_name,url,function(){
 					request(request_url, function (error, response, body) {
-						//console.log("执行来自"+queue_name+"的url："+request_url);
+						console.log("执行来自"+queue_name+"的url："+request_url);
 						//queue_status_array[queue_name] = 0 ;
 						run_queue(queue_name,attribute);
 						return ;
