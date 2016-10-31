@@ -190,6 +190,7 @@ app.post('/api/addTask', function (req, res){
 });
 
 function check_token(post_app_key,post_app_token){
+	console.log("app_key:%s app_token:%s", post_app_key, post_app_token);
 	if (post_app_key == config.app_key && post_app_token ==  config.app_token) {
 		return true;
 	}else{
