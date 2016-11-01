@@ -18,7 +18,7 @@ var redis_client = redis.createClient(config.redis_port,config.redis_host); //cr
 
 app.use(function(request, response, next){
 	console.log(Date());
-	console.log('http://'+request.headers.host+request.url);
+	console.log('api调用：http://'+request.headers.host+request.url);
     next();
 });
 //  首页
