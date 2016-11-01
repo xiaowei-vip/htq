@@ -16,7 +16,11 @@ app.use(bodyParser.urlencoded({
 }));
 var redis_client = redis.createClient(config.redis_port,config.redis_host); //creates a new client
 
-
+app.use(function(request, response, next){
+	console.log(Date());
+	console.log('http://'+req.hostname+req.port+req.path);
+    next();
+});
 //  首页
 app.get('/', function (req, res) {
    res.send('HTQ');
@@ -177,6 +181,8 @@ app.post('/api/addTask', function (req, res){
 		   }
 			redis_client.zadd(queue_name,score,url,function(err, reply){
 				if (reply) {
+					console.log(Date());
+					console.log('新任务添加成功：'+url);
 					res.send( '{"error_code":0,"message":"添加成功"}');
 				}else{
 					res.send('{"error_code":1001,"message":"添加失败"}');
@@ -190,7 +196,8 @@ app.post('/api/addTask', function (req, res){
 });
 
 function check_token(post_app_key,post_app_token){
-	console.log("app_key:%s app_token:%s", post_app_key, post_app_token);
+	
+	//console.log("app_key:%s app_token:%s", post_app_key, post_app_token);
 	if (post_app_key == config.app_key && post_app_token ==  config.app_token) {
 		return true;
 	}else{
@@ -203,6 +210,7 @@ var server = app.listen(config.api_port, function () {
   var host = server.address().address;
   host = host != '::' ? host : '127.0.0.1';
   var port = server.address().port ;
+	console.log(Date());
   console.log("APi服务已经启动，访问地址为 http://%s:%s", host, port);
 
 });
